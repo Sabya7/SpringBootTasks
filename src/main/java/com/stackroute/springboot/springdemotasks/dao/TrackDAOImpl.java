@@ -8,6 +8,10 @@ import com.stackroute.springboot.springdemotasks.repository.TrackRepository;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -16,9 +20,15 @@ import java.util.List;
 
 @Repository
 @Transactional
-public class TrackDAOImpl implements TrackDAO {
-
-
+public class TrackDAOImpl implements TrackDAO, ApplicationListener<ContextRefreshedEvent>, CommandLineRunner {
+	@Value("${track.1.name:default}")
+	String name1;
+	@Value("${track.1.comment:default}")
+	String comment1;
+	@Value("${track.2.name:default}")
+	String name2;
+	@Value("${track.2.comment:default}")
+	String comment2;
 	private TrackRepository sessionFactory;
 
 	@Autowired
@@ -83,4 +93,15 @@ public class TrackDAOImpl implements TrackDAO {
 	}
 
 
+	@Override
+	public void run(String... args) throws Exception {
+
+	}
+
+	@Override
+	public void onApplicationEvent(ContextRefreshedEvent event) {
+		sessionFactory.save(new Track(1,name1,comment1));
+		sessionFactory.save(new Track(2,name2,comment2));
+
+	}
 }
