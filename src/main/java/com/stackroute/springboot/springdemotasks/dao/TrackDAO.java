@@ -15,6 +15,6 @@ public interface TrackDAO {
 
 	public boolean UpdateTrack(Track track);
 
-
+	public List<Track>searchByName(String s);
    
 }

@@ -4,6 +4,7 @@ package com.stackroute.springboot.springdemotasks.controller;
 import com.stackroute.springboot.springdemotasks.dao.TrackDAO;
 import com.stackroute.springboot.springdemotasks.model.Track;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -66,6 +67,12 @@ public class TrackController {
 		List<Track> list = trackDAO.getAllTracks();
 		model.addAttribute("tracks", list);
 		return list;
+	}
+	@RequestMapping("/search")
+	List<Track> searchByName(@RequestBody String name)
+	{
+		System.out.println(trackDAO.searchByName("Rohit").toString());
+       return trackDAO.searchByName(name);
 	}
 
 

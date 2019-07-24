@@ -70,5 +70,10 @@ public class TrackDAOImpl implements TrackDAO {
 		//session.getTransaction().commit();
 		return false;
 	}
+	public List<Track>searchByName(String s)
+	{
+		return sessionFactory.searchByName(s);
+	}
+
 
 }
