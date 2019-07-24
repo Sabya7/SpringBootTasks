@@ -2,6 +2,8 @@ package com.stackroute.springboot.springdemotasks.controller;
 
 
 import com.stackroute.springboot.springdemotasks.dao.TrackDAO;
+import com.stackroute.springboot.springdemotasks.exceptions.TrackAlreadyExistsException;
+import com.stackroute.springboot.springdemotasks.exceptions.TrackNotFoundException;
 import com.stackroute.springboot.springdemotasks.model.Track;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
@@ -37,7 +39,7 @@ public class TrackController {
 	}
 
 	@RequestMapping("/saveTrack")
-	public List<Track> saveTrack(Model model, @RequestBody Track track) {
+	public List<Track> saveTrack(Model model, @RequestBody Track track) throws TrackAlreadyExistsException {
 		trackDAO.saveTrack(track);
 		List<Track> list = trackDAO.getAllTracks();
 		model.addAttribute("tracks", list);
@@ -51,8 +53,16 @@ public class TrackController {
 		track1.setId(track.getId());
 		track1.setName(track.getName());
 		track1.setComment(track.getComment());
-		trackDAO.deleteTrack(track.getId());
-		trackDAO.saveTrack(track1);
+		try {
+			trackDAO.deleteTrack(track.getId());
+		} catch (TrackNotFoundException e) {
+			e.printStackTrace();
+		}
+		try {
+			trackDAO.saveTrack(track1);
+		} catch (TrackAlreadyExistsException e) {
+			e.printStackTrace();
+		}
 		//model.addAttribute("track", track);
 		return track1;
 	}
@@ -62,7 +72,7 @@ public class TrackController {
 //		return id+ "deleted";
 //	}
 	@RequestMapping("/deleteTrack")
-	public List<Track> deleteTrack(Model model, @RequestBody Track track) {
+	public List<Track> deleteTrack(Model model, @RequestBody Track track)throws TrackNotFoundException {
 		trackDAO.deleteTrack(track.getId());
 		List<Track> list = trackDAO.getAllTracks();
 		model.addAttribute("tracks", list);

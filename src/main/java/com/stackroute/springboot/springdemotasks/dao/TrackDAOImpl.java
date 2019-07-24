@@ -1,6 +1,8 @@
 package com.stackroute.springboot.springdemotasks.dao;
 
 
+import com.stackroute.springboot.springdemotasks.exceptions.TrackAlreadyExistsException;
+import com.stackroute.springboot.springdemotasks.exceptions.TrackNotFoundException;
 import com.stackroute.springboot.springdemotasks.model.Track;
 import com.stackroute.springboot.springdemotasks.repository.TrackRepository;
 import org.hibernate.Session;
@@ -27,7 +29,9 @@ public class TrackDAOImpl implements TrackDAO {
 
 	//implement all the methods
 	@Override
-	public boolean saveTrack(Track track) {
+	public boolean saveTrack(Track track) throws TrackAlreadyExistsException {
+		if(sessionFactory.existsById(track.getId()))
+			throw new TrackAlreadyExistsException("Already exists");
 		sessionFactory.save(track);
         //session.beginTransaction();
 
@@ -36,10 +40,13 @@ public class TrackDAOImpl implements TrackDAO {
 	}
 
 	@Override
-	public boolean deleteTrack(int id) {
+	public boolean deleteTrack(int id)throws TrackNotFoundException {
 		//Session session=sessionFactory.unwrap(Session.class);
       //  session.beginTransaction();
+		if(sessionFactory.existsById(id))
         sessionFactory.deleteById(id);
+		else
+			throw new TrackNotFoundException("Doesn't Exist");
        // session.getTransaction().commit();
 		return true;
 	}
