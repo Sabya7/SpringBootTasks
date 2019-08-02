@@ -10,7 +10,7 @@ public interface TrackService {
 
         public Track findById(int id);
 
-        public void save(Track track) ;
+        public Track save(Track track) ;
 
         public boolean deleteById(int id);
 

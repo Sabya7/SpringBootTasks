@@ -40,8 +40,9 @@ public class TrackServiceImpl implements TrackService{
     }
 
     @Override
-    public void save(Track track)  {
+    public Track save(Track track)  {
         trackRepository.save(track);
+        return track;
     }
 
     @Override
